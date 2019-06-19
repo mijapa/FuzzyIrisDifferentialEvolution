@@ -51,9 +51,9 @@ def init(x):
 
     # Custom membership functions can be built interactively with a familiar,
     # Pythonic API
-    species['setosa'] = fuzz.trimf(species.universe, [0, 0, 0])
-    species['versicolour'] = fuzz.trimf(species.universe, [1, 1, 1])
-    species['virginica'] = fuzz.trimf(species.universe, [2, 2, 2])
+    species['setosa'] = fuzz.trimf(species.universe, [0, 0, x[12]])
+    species['versicolour'] = fuzz.trimf(species.universe, [0, x[13], 2])
+    species['virginica'] = fuzz.trimf(species.universe, [x[14], 2, 2])
 
     # You can see how these look with .view()
     # sepal_length.view()
@@ -66,7 +66,7 @@ def init(x):
     # plt.show()
 
     rule2 = ctrl.Rule(sepal_length['mid'] | sepal_length['big'], species['versicolour'])
-    rule3 = ctrl.Rule(sepal_length['small'], species['virginica'])
+    rule3 = ctrl.Rule(sepal_length['small'] | sepal_width['small'], species['virginica'])
 
     rule4 = ctrl.Rule(sepal_width['big'], species['setosa'])
     rule5 = ctrl.Rule(petal_length['small'], species['versicolour'])
@@ -151,10 +151,14 @@ def current_solution(curr_, convergence):
 
 from scipy.optimize import differential_evolution
 
-bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3
+bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3 + [(0, 2)] * 3
 result = differential_evolution(fuzz, bounds,
                                 maxiter=10, popsize=10, tol=0.01, mutation=(0.5, 1), recombination=0.7, workers=-1,
-                                callback=current_solution)  # callback for drawing)
+                                disp=True,  # display status messages
+                                polish=False,
+                                # L-BFGS-B method is used to polish the best population member at the end, which can improve the minimization slightly
+                                # callback=current_solution,  # callback for drawing)
+                                )
 
 #
 print("Found solution at {} with value {}".format(result.x, result.fun))
