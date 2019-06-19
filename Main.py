@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
-import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 from sklearn import datasets
-from matplotlib import pyplot as plt
 
 # import some data to play with
 iris = datasets.load_iris()
@@ -38,20 +36,18 @@ def init(x):
     sepal_length['small'] = fuzz.trimf(sepal_length.universe, [4, 4, x[0]])
     sepal_length['mid'] = fuzz.trimf(sepal_length.universe, [4, x[1], 8])
     sepal_length['big'] = fuzz.trimf(sepal_length.universe, [x[2], 8, 8])
-    sepal_width.automf(3)
-    petal_length.automf(3)
-    petal_width.automf(3)
 
-    # Differential
-    # Evolution(DE)
-    # do
-    # ustalenia
-    # parametrów
-    # funkcji
-    # trójkątnych
-    # zamiast automatu powyżej
+    sepal_width['small'] = fuzz.trimf(sepal_width.universe, [2, 2, x[3]])
+    sepal_width['mid'] = fuzz.trimf(sepal_width.universe, [2, x[4], 5])
+    sepal_width['big'] = fuzz.trimf(sepal_width.universe, [x[5], 5, 5])
 
-    # sepal_length['small'] = fuzz.trimf(sepal_length, [0 , 0, ])
+    petal_length['small'] = fuzz.trimf(petal_length.universe, [1, 1, x[6]])
+    petal_length['mid'] = fuzz.trimf(petal_length.universe, [1, x[7], 7])
+    petal_length['big'] = fuzz.trimf(petal_length.universe, [x[8], 7, 7])
+
+    petal_width['small'] = fuzz.trimf(petal_width.universe, [0, 0, x[9]])
+    petal_width['mid'] = fuzz.trimf(petal_width.universe, [0, x[10], 3])
+    petal_width['big'] = fuzz.trimf(petal_width.universe, [x[11], 3, 3])
 
     # Custom membership functions can be built interactively with a familiar,
     # Pythonic API
@@ -72,9 +68,9 @@ def init(x):
     rule2 = ctrl.Rule(sepal_length['mid'] | sepal_length['big'], species['versicolour'])
     rule3 = ctrl.Rule(sepal_length['small'], species['virginica'])
 
-    rule4 = ctrl.Rule(sepal_width['good'], species['setosa'])
-    rule5 = ctrl.Rule(petal_length['poor'], species['versicolour'])
-    rule6 = ctrl.Rule(petal_width['average'], species['virginica'])
+    rule4 = ctrl.Rule(sepal_width['big'], species['setosa'])
+    rule5 = ctrl.Rule(petal_length['small'], species['versicolour'])
+    rule6 = ctrl.Rule(petal_width['mid'], species['virginica'])
 
     rules=[]
     rules.append(rule1)
@@ -153,10 +149,12 @@ def current_solution(curr_, convergence):
 #---
 
 
-from scipy.optimize import rosen, differential_evolution
-bounds = [(4,8)]*3
+from scipy.optimize import differential_evolution
+
+bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3
 result = differential_evolution(fuzz, bounds,
-                                maxiter=25, popsize=25, tol=0.01, mutation=(0.5, 1), recombination=0.7, workers=-1, callback=current_solution) #callback for drawing)
+                                maxiter=10, popsize=10, tol=0.01, mutation=(0.5, 1), recombination=0.7, workers=-1,
+                                callback=current_solution)  # callback for drawing)
 
 #
 print("Found solution at {} with value {}".format(result.x, result.fun))
