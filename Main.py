@@ -182,7 +182,7 @@ bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3 + [(0, 3)] + 
 result = differential_evolution(fuzz, bounds,
                                 args=[False],  # don't display
                                 maxiter=100, popsize=2,
-                                tol=0.00000001,  # relative tolerance for convergence,
+                                tol=0.01,  # relative tolerance for convergence,
                                 mutation=(0.1, 0.2), recombination=0.3,
                                 workers=-1,  # parallel computing
                                 disp=True,  # display status messages
