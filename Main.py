@@ -73,19 +73,19 @@ def init(x, display):
     rules = []
 
     rules.append(ctrl.Rule(sepal_length['mid'], species['setosa']))
-    # rules.append(ctrl.Rule(sepal_width['mid'], species['setosa']))
-    # rules.append(ctrl.Rule(petal_length['small'], species['setosa']))
+    rules.append(ctrl.Rule(sepal_width['mid'], species['setosa']))
+    rules.append(ctrl.Rule(petal_length['small'], species['setosa']))
     rules.append(ctrl.Rule(petal_width['small'], species['setosa']))
 
     rules.append(ctrl.Rule(sepal_length['big'], species['versicolour']))
-    # rules.append(ctrl.Rule(sepal_width['small'], species['versicolour']))
-    # rules.append(ctrl.Rule(petal_length['mid'], species['versicolour']))
+    rules.append(ctrl.Rule(sepal_width['small'], species['versicolour']))
+    rules.append(ctrl.Rule(petal_length['mid'], species['versicolour']))
     rules.append(ctrl.Rule(petal_width['mid'], species['versicolour']))
 
-    # rules.append(ctrl.Rule(sepal_length['big'], species['virginica']))
+    rules.append(ctrl.Rule(sepal_length['big'], species['virginica']))
     rules.append(ctrl.Rule(sepal_width['small'], species['virginica']))
     rules.append(ctrl.Rule(petal_length['big'], species['virginica']))
-    # rules.append(ctrl.Rule(petal_width['big'], species['virginica']))
+    rules.append(ctrl.Rule(petal_width['big'], species['virginica']))
 
 
     if display:
