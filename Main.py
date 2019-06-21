@@ -193,7 +193,7 @@ result = differential_evolution(fuzz, bounds,
                                 )
 
 print("Found solution at {} with value {}".format(result.x, result.fun))
-# init(result.x, True) # display fuzzy rules and linguistic variables ba
+init(result.x, True)  # display fuzzy rules and linguistic variables
 plt.figure(figsize=(11, 4))
 plots = plt.plot(result_list, 'c-')
 plt.legend(plots, ('Wrong Answers',), frameon=True)
