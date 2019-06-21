@@ -11,14 +11,15 @@ y = pd.DataFrame(iris.target, columns=['Target'])
 target = iris.target
 iris = iris.data[:, :]
 
-print('x.shape: ', x.shape)
-print('y.shape: ', y.shape)
 
-print('x.head(5)', x.head())
-print('y.head(5)', y.head())
-
-print('x.describe()', x.describe())
-print('y.describe()', y.describe())
+# print('x.shape: ', x.shape)
+# print('y.shape: ', y.shape)
+#
+# print('x.head(5)', x.head())
+# print('y.head(5)', y.head())
+#
+# print('x.describe()', x.describe())
+# print('y.describe()', y.describe())
 
 
 def init(x, display):
@@ -26,12 +27,12 @@ def init(x, display):
 
     # New Antecedent/Consequent objects hold universe variables and membership
     # functions1
-    sepal_length = ctrl.Antecedent(np.arange(4, 8, 0.1), 'sepal_length')
-    sepal_width = ctrl.Antecedent(np.arange(2, 5, 0.1), 'sepal_width')
-    petal_length = ctrl.Antecedent(np.arange(1, 7, 0.1), 'petal_length')
-    petal_width = ctrl.Antecedent(np.arange(0, 3, 0.1), 'petal_width')
+    sepal_length = ctrl.Antecedent(np.arange(4, 8.1, 0.1), 'sepal_length')
+    sepal_width = ctrl.Antecedent(np.arange(2, 5.1, 0.1), 'sepal_width')
+    petal_length = ctrl.Antecedent(np.arange(1, 7.1, 0.1), 'petal_length')
+    petal_width = ctrl.Antecedent(np.arange(0, 3.1, 0.1), 'petal_width')
 
-    species = ctrl.Consequent(np.arange(0, 3, 1), 'species')
+    species = ctrl.Consequent(np.arange(0, 4, 1), 'species')
 
     # Auto-membership function population is possible with .automf(3, 5, or 7)
     sepal_length['small'] = fuzz.trimf(sepal_length.universe, [4, 4, x[0]])
@@ -52,9 +53,9 @@ def init(x, display):
 
     # Custom membership functions can be built interactively with a familiar,
     # Pythonic API
-    species['setosa'] = fuzz.trimf(species.universe, [0, x[12], 3])
+    species['setosa'] = fuzz.trimf(species.universe, [0, 0, x[12]])
     species['versicolour'] = fuzz.trimf(species.universe, [0, x[13], 3])
-    species['virginica'] = fuzz.trimf(species.universe, [0, x[14], 3])
+    species['virginica'] = fuzz.trimf(species.universe, [x[14], 3, 3])
 
     # You can see how these look with .view()
     if display:
@@ -69,41 +70,31 @@ def init(x, display):
     # 1 7
     # 0 3
 
-    rule1 = ctrl.Rule(sepal_length['small'], species['setosa'])
-    rule2 = ctrl.Rule(sepal_width['mid'], species['setosa'])
-    rule3 = ctrl.Rule(petal_length['small'], species['setosa'])
-    rule4 = ctrl.Rule(petal_width['small'], species['setosa'])
+    rules = []
 
-    rule5 = ctrl.Rule(sepal_length['big'], species['virginica'])
-    rule6 = ctrl.Rule(sepal_width['small'], species['virginica'])
-    rule7 = ctrl.Rule(petal_length['big'], species['virginica'])
-    rule8 = ctrl.Rule(petal_width['mid'], species['virginica'])
+    rules.append(ctrl.Rule(sepal_length['mid'], species['setosa']))
+    # rules.append(ctrl.Rule(sepal_width['mid'], species['setosa']))
+    # rules.append(ctrl.Rule(petal_length['small'], species['setosa']))
+    rules.append(ctrl.Rule(petal_width['small'], species['setosa']))
 
-    rule9 = ctrl.Rule(sepal_length['big'], species['versicolour'])
-    rule10 = ctrl.Rule(sepal_width['small'], species['versicolour'])
-    rule11 = ctrl.Rule(petal_length['mid'], species['versicolour'])
-    rule12 = ctrl.Rule(petal_width['small'], species['versicolour'])
+    rules.append(ctrl.Rule(sepal_length['big'], species['versicolour']))
+    # rules.append(ctrl.Rule(sepal_width['small'], species['versicolour']))
+    # rules.append(ctrl.Rule(petal_length['mid'], species['versicolour']))
+    rules.append(ctrl.Rule(petal_width['mid'], species['versicolour']))
+
+    # rules.append(ctrl.Rule(sepal_length['big'], species['virginica']))
+    rules.append(ctrl.Rule(sepal_width['small'], species['virginica']))
+    rules.append(ctrl.Rule(petal_length['big'], species['virginica']))
+    # rules.append(ctrl.Rule(petal_width['big'], species['virginica']))
+
 
     if display:
-        rule1.view()
+        rules[0].view()
         plt.show()
 
 
 
 
-    rules=[]
-    rules.append(rule1)
-    rules.append(rule2)
-    rules.append(rule3)
-    rules.append(rule4)
-    rules.append(rule5)
-    rules.append(rule6)
-    rules.append(rule7)
-    rules.append(rule8)
-    rules.append(rule9)
-    rules.append(rule10)
-    rules.append(rule11)
-    rules.append(rule12)
 
     tipping_ctrl = ctrl.ControlSystem(rules)
     tipping = ctrl.ControlSystemSimulation(tipping_ctrl)
@@ -114,6 +105,12 @@ def init(x, display):
     i = 0
     true = 0
     false = 0
+    sef = 0
+    set = 0
+    vef = 0
+    vet = 0
+    vif = 0
+    vit = 0
     for example in iris:
         # print('sepal_length: {}, sepal_width: {}, petal_length: {}, petal_width: {}'.format(
         #     example[0], example[1], example[2], example[3]))
@@ -128,40 +125,39 @@ def init(x, display):
         out = tipping.output['species']
         if out < 1:
             # print('setosa')  # 0
+            # species.view(sim=tipping)
+            # plt.show()
             if target[i] == 0:
                 true += 1
+                set += 1
             else:
                 false += 1
-        elif out < 2:
+                sef += 1
+        elif out < x[15]:
             # print('versicolour')  # 1
+            # species.view(sim=tipping)
+            # plt.show()
             if target[i] == 1:
                 true += 1
+                vet += 1
             else:
                 false += 1
+                vef += 1
         elif out < 3:
             # print('virginica')  # 2
             if target[i] == 2:
                 true += 1
-                species.view(sim=tipping)
-                plt.show()
-                print("3 true")
+                vit += 1
             else:
                 false += 1
-                print("3 false")
-
+                vif += 1
         i += 1
-
+    # print("setosa t/f positiv: {}/{}, versicolour t/f positive: {}/{}, virginica t/f positive: {}/{}".format(set, sef, vet, vef, vit, vif))
     if display:
         species.view(sim=tipping)
         plt.show()
 
     return true, false
-
-
-# true, false = init(5)
-#
-# print()
-# print('true: {}, false: {}'.format(true, false))
 
 def fuzz(x, display):
     true, false = init(x, display)
@@ -171,17 +167,21 @@ def fuzz(x, display):
 results_ = list()
 def current_solution(curr_, convergence):
     # results_.append(curr_)
-    print(curr_.fun, convergence)
+    print(curr_, convergence)
 #---
 
 
 from scipy.optimize import differential_evolution
 
-bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3 + [(0, 3)] * 3
+bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3 + [(0, 3)] + [(0, 3)] + [(0, 3)] + [(1, 2)]
 result = differential_evolution(fuzz, bounds,
                                 args=[False],  # don't display
-                                maxiter=10, popsize=10, tol=0.01, mutation=(0.5, 1), recombination=0.7, workers=-1,
+                                maxiter=100, popsize=2,
+                                tol=0.00000001,  # relative tolerance for convergence,
+                                mutation=(0.1, 0.2), recombination=0.3,
+                                workers=-1,  # parallel computing
                                 disp=True,  # display status messages
+                                updating='deferred',
                                 polish=False,
                                 # L-BFGS-B method is used to polish the best population member at the end, which can improve the minimization slightly
                                 # callback=current_solution,  # callback for drawing)
