@@ -165,15 +165,20 @@ def fuzz(x, display):
 
 #for drawing
 results_ = list()
+conv_list = list()
+result_list = list()
 def current_solution(curr_, convergence):
     # results_.append(curr_)
-    print(curr_, convergence)
+    # conv_list.append(convergence)
+    result_list.append(fuzz(curr_, False))
+    # print(convergence)
 #---
 
 
 from scipy.optimize import differential_evolution
 
 bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3 + [(0, 3)] + [(0, 3)] + [(0, 3)] + [(1, 2)]
+
 result = differential_evolution(fuzz, bounds,
                                 args=[False],  # don't display
                                 maxiter=100, popsize=2,
@@ -182,11 +187,16 @@ result = differential_evolution(fuzz, bounds,
                                 workers=-1,  # parallel computing
                                 disp=True,  # display status messages
                                 updating='deferred',
-                                polish=False,
-                                # L-BFGS-B method is used to polish the best population member at the end, which can improve the minimization slightly
-                                # callback=current_solution,  # callback for drawing)
+                                # polish=False,  # L-BFGS-B method is used to polish the best population member at the
+                                # end, which can improve the minimization slightly
+                                callback=current_solution,  # callback for drawing)
                                 )
 
-#
 print("Found solution at {} with value {}".format(result.x, result.fun))
-init(result.x, [True])
+# init(result.x, True) # display fuzzy rules and linguistic variables ba
+plt.figure(figsize=(11, 4))
+plots = plt.plot(result_list, 'c-')
+plt.legend(plots, ('Wrong Answers',), frameon=True)
+plt.xlabel('Iterations')
+plt.grid()
+plt.show()
