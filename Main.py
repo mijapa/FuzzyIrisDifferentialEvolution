@@ -150,9 +150,9 @@ def fuzz(x, display):
                 virginica_false_positive += 1
         i += 1
 
-    print("setosa t/f positiv: {}/{}, versicolour t/f positive: {}/{}, virginica t/f positive: {}/{}, false: {}".format(
-        setosa_true_positive, setosa_false_positive, versicolour_true_positive, versicolour_false_positive,
-        virginica_true_positive, virginica_false_positive, false))
+    # print("setosa t/f positiv: {}/{}, versicolour t/f positive: {}/{}, virginica t/f positive: {}/{},
+    # false: {}".format( setosa_true_positive, setosa_false_positive, versicolour_true_positive,
+    # versicolour_false_positive, virginica_true_positive, virginica_false_positive, false))
     if display:
         species.view(sim=classification)
         plt.show()
