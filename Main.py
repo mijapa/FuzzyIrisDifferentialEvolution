@@ -127,7 +127,7 @@ def fuzz(x, display):
         out = classification.output['species']
 
         # assign a category
-        if out < 1:
+        if out < x[16]:
             if target[i] == 0:
                 true += 1
                 setosa_true_positive += 1
@@ -141,7 +141,7 @@ def fuzz(x, display):
             else:
                 false += 1
                 versicolour_false_positive += 1
-        elif out < 3:
+        else:
             if target[i] == 2:
                 true += 1
                 virginica_true_positive += 1
@@ -150,9 +150,9 @@ def fuzz(x, display):
                 virginica_false_positive += 1
         i += 1
 
-    # print("setosa t/f positiv: {}/{}, versicolour t/f positive: {}/{}, virginica t/f positive: {}/{}".format(
-    # setosa_true_positive, setosa_false_positive, versicolour_true_positive, versicolour_false_positive,
-    # virginica_true_positive, virginica_false_positive))
+    print("setosa t/f positiv: {}/{}, versicolour t/f positive: {}/{}, virginica t/f positive: {}/{}, false: {}".format(
+        setosa_true_positive, setosa_false_positive, versicolour_true_positive, versicolour_false_positive,
+        virginica_true_positive, virginica_false_positive, false))
     if display:
         species.view(sim=classification)
         plt.show()
@@ -182,16 +182,16 @@ def current_solution(curr_, convergence):
 # third line - assign category
 bounds = [(4, 8)] * 3 + [(2, 5)] * 3 + [(1, 6)] * 3 + [(0, 3)] * 3 \
          + [(0, 3)] + [(0, 3)] + [(0, 3)] \
-         + [(1, 2)]
+         + [(1, 2)] + [(0, 2)]
 print("\nDifferential evolution begins")
 result = differential_evolution(fuzz, bounds,
                                 args=[False],  # additional fixed parameters needed to completely specify the
                                 # objective function - don't display
-                                maxiter=100,  # maximum number of generations over which entire population is evolved
+                                maxiter=200,  # maximum number of generations over which entire population is evolved
                                 # maximum function evaluations (maxiter + 1) * popsize * len(x)
-                                popsize=2,  # a multiplier for setting the total population size.
+                                popsize=4,  # a multiplier for setting the total population size.
                                 # population has popsize * len(x) individuals
-                                tol=0.01,  # relative tolerance for convergence,
+                                tol=0.1,  # relative tolerance for convergence,
                                 mutation=(0.1, 0.2),  # if specified as a float it should be in the range [0, 2], if
                                 # specified as a tuple (min, max) dithering is employed; dithering randomly changes
                                 # the mutation constant on a generation by generation basis.
