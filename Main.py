@@ -100,8 +100,8 @@ def fuzz(x, display):
     classification = ctrl.ControlSystemSimulation(classification_ctrl)
 
     i = 0
-    true = 0
-    false = 0
+    true_count = 0
+    false_count = 0
     setosa_false_positive = 0
     setosa_true_positive = 0
     versicolour_false_positive = 0
@@ -129,36 +129,34 @@ def fuzz(x, display):
         # assign a category
         if out < x[16]:
             if target[i] == 0:
-                true += 1
+                true_count += 1
                 setosa_true_positive += 1
             else:
-                false += 1
+                false_count += 1
                 setosa_false_positive += 1
         elif out < x[15]:
             if target[i] == 1:
-                true += 1
+                true_count += 1
                 versicolour_true_positive += 1
             else:
-                false += 1
+                false_count += 1
                 versicolour_false_positive += 1
         else:
             if target[i] == 2:
-                true += 1
+                true_count += 1
                 virginica_true_positive += 1
             else:
-                false += 1
+                false_count += 1
                 virginica_false_positive += 1
         i += 1
 
-    # print("setosa t/f positiv: {}/{}, versicolour t/f positive: {}/{}, virginica t/f positive: {}/{},
-    # false: {}".format( setosa_true_positive, setosa_false_positive, versicolour_true_positive,
-    # versicolour_false_positive, virginica_true_positive, virginica_false_positive, false))
+    # print("setosa t/f positiv: {}/{}, versicolour t/f positive: {}/{}, virginica t/f positive: {}/{}, false_count: {}".format( setosa_true_positive, setosa_false_positive, versicolour_true_positive, versicolour_false_positive, virginica_true_positive, virginica_false_positive, false_count))
     if display:
         species.view(sim=classification)
         plt.show()
 
-    # as evaluation score to minimization return false predictions
-    return false
+    # as evaluation score to minimization return false_count predictions
+    return false_count
 
 
 # for drawing
@@ -187,12 +185,12 @@ print("\nDifferential evolution begins")
 result = differential_evolution(fuzz, bounds,
                                 args=[False],  # additional fixed parameters needed to completely specify the
                                 # objective function - don't display
-                                maxiter=200,  # maximum number of generations over which entire population is evolved
+                                maxiter=100,  # maximum number of generations over which entire population is evolved
                                 # maximum function evaluations (maxiter + 1) * popsize * len(x)
-                                popsize=4,  # a multiplier for setting the total population size.
+                                popsize=20,  # a multiplier for setting the total population size.
                                 # population has popsize * len(x) individuals
                                 tol=0.1,  # relative tolerance for convergence,
-                                mutation=(0.1, 0.2),  # if specified as a float it should be in the range [0, 2], if
+                                mutation=(0.1, 1),  # if specified as a float it should be in the range [0, 2], if
                                 # specified as a tuple (min, max) dithering is employed; dithering randomly changes
                                 # the mutation constant on a generation by generation basis.
                                 recombination=0.3,  # crossover probability
