@@ -46,12 +46,13 @@ def fuzz(x, display):
     # adding penalty for wrong sequence of parameters
     penalty = 0
     small_penalty = 1000
-    distance_s_l = 0.4
-    distance_s_w = 0.3
-    distance_p_l = 0.4
-    distance_p_w = 0.3
+    big_penalty = 1000000
+    distance_s_l = 0.3
+    distance_s_w = 0.2
+    distance_p_l = 0.3
+    distance_p_w = 0.2
     distance_s = 0.1
-    distance = 1.8
+    distance = 0.4
     if x[1] - x[0] < distance_s_l: penalty += small_penalty
     if x[2] - x[1] < distance_s_l: penalty += small_penalty
     if x[2] - x[0] < distance: penalty += small_penalty
@@ -204,8 +205,11 @@ def fuzz(x, display):
         classification.input['petal_length'] = sample[2]
         classification.input['petal_width'] = sample[3]
 
-        # Crunch the numbers
-        classification.compute()
+        try:
+            # Crunch the numbers
+            classification.compute()
+        except:
+            return big_penalty
 
         out = classification.output['species']
 
