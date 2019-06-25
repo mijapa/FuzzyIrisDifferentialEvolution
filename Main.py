@@ -46,25 +46,71 @@ def fuzz(x, display):
     # adding penalty for wrong sequence of parameters
     penalty = 0
     small_penalty = 1000
-    distance_s_l = 1
-    distance_s_w = 1
-    distance_p_l = 1.5
-    distance_p_w = 0.4
-    distance_s = 0.8
+    distance_s_l = 0.4
+    distance_s_w = 0.3
+    distance_p_l = 0.4
+    distance_p_w = 0.3
+    distance_s = 0.1
+    distance = 1.8
+    if x[1] - x[0] < distance_s_l: penalty += small_penalty
     if x[2] - x[1] < distance_s_l: penalty += small_penalty
-    if x[3] - x[2] < distance_s_l: penalty += small_penalty
+    if x[2] - x[0] < distance: penalty += small_penalty
 
-    if x[7] - x[6] < distance_s_w: penalty += small_penalty
-    if x[8] - x[7] < distance_s_w: penalty += small_penalty
+    if x[4] - x[3] < distance_s_l: penalty += small_penalty
+    if x[5] - x[4] < distance_s_l: penalty += small_penalty
+    if x[5] - x[3] < distance: penalty += small_penalty
 
-    if x[12] - x[11] < distance_p_l: penalty += small_penalty
-    if x[13] - x[12] < distance_p_l: penalty += small_penalty
+    if x[7] - x[6] < distance_s_l: penalty += small_penalty
+    if x[8] - x[7] < distance_s_l: penalty += small_penalty
+    if x[8] - x[6] < distance: penalty += small_penalty
 
-    if x[17] - x[16] < distance_p_w: penalty += small_penalty
-    if x[18] - x[17] < distance_p_w: penalty += small_penalty
+    if x[10] - x[9] < distance_s_w: penalty += small_penalty
+    if x[11] - x[10] < distance_s_w: penalty += small_penalty
+    if x[11] - x[9] < distance: penalty += small_penalty
 
-    if x[22] - x[21] < distance_s: penalty += small_penalty
-    if x[23] - x[22] < distance_s: penalty += small_penalty
+    if x[13] - x[12] < distance_s_w: penalty += small_penalty
+    if x[14] - x[13] < distance_s_w: penalty += small_penalty
+    if x[14] - x[12] < distance: penalty += small_penalty
+
+    if x[16] - x[15] < distance_s_w: penalty += small_penalty
+    if x[17] - x[16] < distance_s_w: penalty += small_penalty
+    if x[17] - x[15] < distance: penalty += small_penalty
+
+    if x[19] - x[18] < distance_p_l: penalty += small_penalty
+    if x[20] - x[19] < distance_p_l: penalty += small_penalty
+    if x[20] - x[18] < distance: penalty += small_penalty
+
+    if x[22] - x[21] < distance_p_l: penalty += small_penalty
+    if x[23] - x[22] < distance_p_l: penalty += small_penalty
+    if x[23] - x[21] < distance: penalty += small_penalty
+
+    if x[25] - x[24] < distance_p_l: penalty += small_penalty
+    if x[26] - x[25] < distance_p_l: penalty += small_penalty
+    if x[26] - x[24] < distance: penalty += small_penalty
+
+    if x[28] - x[27] < distance_p_w: penalty += small_penalty
+    if x[29] - x[28] < distance_p_w: penalty += small_penalty
+    if x[29] - x[27] < distance: penalty += small_penalty
+
+    if x[31] - x[30] < distance_p_w: penalty += small_penalty
+    if x[32] - x[31] < distance_p_w: penalty += small_penalty
+    if x[32] - x[30] < distance: penalty += small_penalty
+
+    if x[34] - x[33] < distance_p_w: penalty += small_penalty
+    if x[35] - x[34] < distance_p_w: penalty += small_penalty
+    if x[35] - x[33] < distance: penalty += small_penalty
+
+    if x[37] - x[36] < distance_s: penalty += small_penalty
+    if x[38] - x[37] < distance_s: penalty += small_penalty
+    if x[38] - x[36] < distance: penalty += small_penalty
+
+    if x[40] - x[39] < distance_s: penalty += small_penalty
+    if x[41] - x[40] < distance_s: penalty += small_penalty
+    if x[41] - x[39] < distance: penalty += small_penalty
+
+    if x[43] - x[42] < distance_s: penalty += small_penalty
+    if x[44] - x[43] < distance_s: penalty += small_penalty
+    if x[44] - x[42] < distance: penalty += small_penalty
 
     if penalty > 0:
         # print("penalty: ", penalty)
@@ -74,25 +120,25 @@ def fuzz(x, display):
     # Auto-membership function population is possible with .automf(3, 5, or 7)
     # Custom membership functions can be built interactively with a familiar,
     # Pythonic API
-    sepal_length['small'] = fuzz.trimf(sepal_length.universe, [4, 4, x[0]])
-    sepal_length['mid'] = fuzz.trimf(sepal_length.universe, [x[1], x[2], x[3]])
-    sepal_length['big'] = fuzz.trimf(sepal_length.universe, [x[4], 8, 8])
+    sepal_length['small'] = fuzz.trimf(sepal_length.universe, [x[0], x[1], x[2]])
+    sepal_length['mid'] = fuzz.trimf(sepal_length.universe, [x[3], x[4], x[5]])
+    sepal_length['big'] = fuzz.trimf(sepal_length.universe, [x[6], x[7], x[8]])
 
-    sepal_width['small'] = fuzz.trimf(sepal_width.universe, [2, 2, x[5]])
-    sepal_width['mid'] = fuzz.trimf(sepal_width.universe, [x[6], x[7], x[8]])
-    sepal_width['big'] = fuzz.trimf(sepal_width.universe, [x[9], 5, 5])
+    sepal_width['small'] = fuzz.trimf(sepal_width.universe, [x[9], x[10], x[11]])
+    sepal_width['mid'] = fuzz.trimf(sepal_width.universe, [x[12], x[13], x[14]])
+    sepal_width['big'] = fuzz.trimf(sepal_width.universe, [x[15], x[16], x[17]])
 
-    petal_length['small'] = fuzz.trimf(petal_length.universe, [1, 1, x[10]])
-    petal_length['mid'] = fuzz.trimf(petal_length.universe, [x[11], x[12], x[13]])
-    petal_length['big'] = fuzz.trimf(petal_length.universe, [x[14], 7, 7])
+    petal_length['small'] = fuzz.trimf(petal_length.universe, [x[18], x[19], x[20]])
+    petal_length['mid'] = fuzz.trimf(petal_length.universe, [x[21], x[22], x[23]])
+    petal_length['big'] = fuzz.trimf(petal_length.universe, [x[24], x[25], x[26]])
 
-    petal_width['small'] = fuzz.trimf(petal_width.universe, [0, 0, x[15]])
-    petal_width['mid'] = fuzz.trimf(petal_width.universe, [x[16], x[17], x[18]])
-    petal_width['big'] = fuzz.trimf(petal_width.universe, [x[19], 3, 3])
+    petal_width['small'] = fuzz.trimf(petal_width.universe, [x[27], x[28], x[29]])
+    petal_width['mid'] = fuzz.trimf(petal_width.universe, [x[30], x[31], x[32]])
+    petal_width['big'] = fuzz.trimf(petal_width.universe, [x[33], x[34], x[35]])
 
-    species['setosa'] = fuzz.trimf(species.universe, [0, 0, x[20]])
-    species['versicolour'] = fuzz.trimf(species.universe, [x[21], x[22], x[23]])
-    species['virginica'] = fuzz.trimf(species.universe, [x[24], 4, 4])
+    species['setosa'] = fuzz.trimf(species.universe, [x[36], x[37], x[38]])
+    species['versicolour'] = fuzz.trimf(species.universe, [x[39], x[40], x[41]])
+    species['virginica'] = fuzz.trimf(species.universe, [x[42], x[43], x[44]])
 
     # display initial solution
     if not len(visited):
@@ -164,14 +210,14 @@ def fuzz(x, display):
         out = classification.output['species']
 
         # assign a category
-        if out < x[25]:
+        if out < x[45]:
             if target[i] == 0:
                 true_positive += 1
                 setosa_true_positive += 1
             else:
                 false_positive += 1
                 setosa_false_positive += 1
-        elif out < x[26]:
+        elif out < x[46]:
             if target[i] == 1:
                 true_positive += 1
                 versicolour_true_positive += 1
@@ -230,19 +276,19 @@ def current_solution(curr_, convergence):
 # first line - membership functions antecedents
 # second line - membership functions consequent
 # third line - assign category
-bounds = [(4, 8)] * 5 + [(2, 5)] * 5 + [(1, 6)] * 5 + [(0, 3)] * 5 \
-         + [(0, 3)] * 5 \
-         + [(1, 2)] + [(0, 2)]
+bounds = [(4, 8)] * 9 + [(2, 5)] * 9 + [(1, 6)] * 9 + [(0, 3)] * 9 \
+         + [(0, 3)] * 9 \
+         + [(0, 3)] + [(0, 3)]
 print("\nDifferential evolution begins")
 result = differential_evolution(fuzz, bounds,
                                 args=[False],  # additional fixed parameters needed to completely specify the
                                 # objective function - don't display
-                                maxiter=700,  # maximum number of generations over which entire population is evolved
+                                maxiter=500,  # maximum number of generations over which entire population is evolved
                                 # maximum function evaluations (maxiter + 1) * popsize * len(x)
-                                popsize=4,  # a multiplier for setting the total population size.
+                                popsize=1,  # a multiplier for setting the total population size.
                                 # population has popsize * len(x) individuals
-                                tol=0.1,  # relative tolerance for convergence,
-                                mutation=(0.1, 1.9),  # if specified as a float it should be in the range [0, 2], if
+                                tol=0.01,  # relative tolerance for convergence,
+                                mutation=(0.1, 1),  # if specified as a float it should be in the range [0, 2], if
                                 # specified as a tuple (min, max) dithering is employed; dithering randomly changes
                                 # the mutation constant on a generation by generation basis.
                                 recombination=0.3,  # crossover probability
