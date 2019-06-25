@@ -164,14 +164,14 @@ def fuzz(x, display):
         out = classification.output['species']
 
         # assign a category
-        if out < x[16]:
+        if out < x[25]:
             if target[i] == 0:
                 true_positive += 1
                 setosa_true_positive += 1
             else:
                 false_positive += 1
                 setosa_false_positive += 1
-        elif out < x[15]:
+        elif out < x[26]:
             if target[i] == 1:
                 true_positive += 1
                 versicolour_true_positive += 1
@@ -237,9 +237,9 @@ print("\nDifferential evolution begins")
 result = differential_evolution(fuzz, bounds,
                                 args=[False],  # additional fixed parameters needed to completely specify the
                                 # objective function - don't display
-                                maxiter=500,  # maximum number of generations over which entire population is evolved
+                                maxiter=700,  # maximum number of generations over which entire population is evolved
                                 # maximum function evaluations (maxiter + 1) * popsize * len(x)
-                                popsize=2,  # a multiplier for setting the total population size.
+                                popsize=4,  # a multiplier for setting the total population size.
                                 # population has popsize * len(x) individuals
                                 tol=0.1,  # relative tolerance for convergence,
                                 mutation=(0.1, 1.9),  # if specified as a float it should be in the range [0, 2], if
